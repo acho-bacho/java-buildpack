@@ -8,5 +8,46 @@ set -e
 BUILD_DIR=$1
 CACHE_DIR=$2
 
+# move original files to .source
+#sourceDir="${BUILD_DIR}/.source"
+#mkdir -p $sourceDir
+#mv ${BUILD_DIR}/* "${sourceDir}"
 
-echo "### injector script"
+# Gets Common JVM Buildpack BASH Functions
+curl --silent --location http://heroku-jvm-common.s3.amazonaws.com/jvm-buildpack-common.tar.gz | tar xz
+. bin/java
+
+KEEP_M2_CACHE="true"
+
+if [ ! -d $CACHE_DIR ]; then
+  KEEP_M2_CACHE="false"
+elif [ -f $CACHE_DIR/removeM2Cache ]; then
+  KEEP_M2_CACHE="false"
+fi
+
+#create the cache dir if it doesn't exist
+mkdir -p $CACHE_DIR
+
+# create default system.properties 
+if [ ! -f ${BUILD_DIR}/system.properties ]; then
+  echo "java.runtime.version=1.6" > ${BUILD_DIR}/system.properties
+fi
+
+# install JDK 
+javaVersion=$(detect_java_version ${BUILD_DIR})
+echo -n "-----> Installing OpenJDK ${javaVersion}..."
+install_java ${BUILD_DIR} ${javaVersion}
+jdk_overlay ${BUILD_DIR}
+echo " done"
+
+
+cd $BUILD_DIR
+
+
+# build app
+BUILDCMD="$CACHE_DIR/.maven/bin/mvn -B -Duser.home=$BUILD_DIR -Dmaven.repo.local=$CACHE_DIR/.m2/repository -s $CACHE_DIR/.m2/settings.xml -DskipTests=true clean package"
+echo "-----> executing $BUILDCMD"
+
+#$BUILDCMD 2>&1 | sed -u 's/^/       /'
+
+echo " done
