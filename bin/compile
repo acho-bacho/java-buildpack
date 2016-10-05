@@ -22,5 +22,11 @@ $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'java_buildpack/buildpack'
 
 build_dir = ARGV[0]
+cache_dir = ARGV[1]
+
+#if File.exist? File.join(build_dir, 'triggerfile.txt')
+    bin_dir = File.expand_path('..', __FILE__)
+    system "#{bin_dir}/injector", build_dir, cache_dir
+#end
 
 JavaBuildpack::Buildpack.with_buildpack(build_dir, 'Compile failed with exception %s', &:compile)
