@@ -50,4 +50,4 @@ echo "-----> executing $BUILDCMD"
 
 #$BUILDCMD 2>&1 | sed -u 's/^/       /'
 
-echo " done
+echo " done"
