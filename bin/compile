@@ -24,11 +24,11 @@ require 'java_buildpack/buildpack'
 build_dir = ARGV[0]
 cache_dir = ARGV[1]
 
-if File.exist? File.join(build_dir, 'INJECT.ENABLED')
+#if File.exist? File.join(build_dir, 'INJECT.ENABLED')
     bin_dir = File.expand_path('..', __FILE__)
     system "#{bin_dir}/injector", build_dir, cache_dir
-else
-   puts "### INJECT.ENABLED not found. No injection will take place"
-end
+#else
+#   puts "### INJECT.ENABLED not found. No injection will take place"
+#end
 
 JavaBuildpack::Buildpack.with_buildpack(build_dir, 'Compile failed with exception %s', &:compile)
