@@ -7,6 +7,11 @@ set -e
 # parse args
 BUILD_DIR=$1
 CACHE_DIR=$2
+TMP_INJECTOR_DIR=$BUILD_DIR/tmp_injector_dir
+
+rm -rf $TMP_INJECTOR_DIR
+mkdir $TMP_INJECTOR_DIR
+cd $TMP_INJECTOR_DIR
 
 # Gets Common JVM Buildpack BASH Functions
 curl --silent --location http://heroku-jvm-common.s3.amazonaws.com/jvm-buildpack-common.tar.gz | tar xz
@@ -24,21 +29,32 @@ install_java ${BUILD_DIR} ${javaVersion}
 jdk_overlay ${BUILD_DIR}
 echo "### installed java to ${BUILD_DIR}"
 
-cd $BUILD_DIR
+#cd $BUILD_DIR
+
+
+
 
 # Injector jars
-#wget vmbgcloudf04.eur.ad.sag:8000/injector_libs.tar.gz
-#mkdir lib
-#tar -xvf injector_libs.tar.gz -C lib
-wget https://raw.githubusercontent.com/acho-bacho/jar-store/master/InjectorLib.jar --directory-prefix=lib
+INJ_DIR=injector
+mkdir $INJ_DIR
+wget vmbgcloudf04.eur.ad.sag:8000/injector_libs.tar.gz # this is my local http server
+tar -xvf injector_libs.tar.gz -C $INJ_DIR
 
-# script that just calls the jars
-#wget vmbgcloudf04.eur.ad.sag:8000/Bosch.tar.gz
-#mkdir Bosch
-#tar -xvf Bosch.tar.gz -C Bosch
-wget https://raw.githubusercontent.com/acho-bacho/jar-store/master/inject
-chmod +x inject
-${BUILD_DIR}/inject
+# Apama rules
+BOSCH_DIR=Bosch
+mkdir $BOSCH_DIR
+wget vmbgcloudf04.eur.ad.sag:8000/Bosch.tar.gz
+tar -xvf Bosch.tar.gz -C $BOSCH_DIR
+
+
+wget vmbgcloudf04.eur.ad.sag:8000/importApamaRules --directory-prefix=$INJ_DIR
+#chmod +x $TMP_INJECTOR_DIR/importApamaRules
+$INJ_DIR/importApamaRules
+
+#wget https://raw.githubusercontent.com/acho-bacho/jar-store/master/InjectorLib.jar --directory-prefix=lib
+#wget https://raw.githubusercontent.com/acho-bacho/jar-store/master/inject
+#chmod +x inject
+#${BUILD_DIR}/inject
 
 
 echo "### Finished"
