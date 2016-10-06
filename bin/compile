@@ -26,7 +26,7 @@ cache_dir = ARGV[1]
 
 #if File.exist? File.join(build_dir, 'INJECT.ENABLED')
     bin_dir = File.expand_path('..', __FILE__)
-    system "#{bin_dir}/apama_injector", build_dir, cache_dir
+    system "#{bin_dir}/inject_apama", build_dir, cache_dir
 #else
 #   puts "### INJECT.ENABLED not found. No injection will take place"
 #end
