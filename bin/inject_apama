@@ -26,10 +26,16 @@ echo "### installed java to ${BUILD_DIR}"
 
 cd $BUILD_DIR
 
-#Injector jars
+# Injector jars
+#wget vmbgcloudf04.eur.ad.sag:8000/injector_libs.tar.gz
+#mkdir lib
+#tar -xvf injector_libs.tar.gz -C lib
 wget https://raw.githubusercontent.com/acho-bacho/jar-store/master/InjectorLib.jar --directory-prefix=lib
 
-# injector script that just calls the jars
+# script that just calls the jars
+#wget vmbgcloudf04.eur.ad.sag:8000/Bosch.tar.gz
+#mkdir Bosch
+#tar -xvf Bosch.tar.gz -C Bosch
 wget https://raw.githubusercontent.com/acho-bacho/jar-store/master/inject
 chmod +x inject
 ${BUILD_DIR}/inject
