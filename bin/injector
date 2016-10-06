@@ -45,7 +45,7 @@ cd $BUILD_DIR
 wget https://raw.githubusercontent.com/acho-bacho/jar-store/master/InjectorLib.jar --directory-prefix=lib
 wget https://raw.githubusercontent.com/acho-bacho/jar-store/master/inject
 chmod +x inject
-inject
+${BUILD_DIR}/inject
 
 
 echo " done"
