@@ -43,11 +43,15 @@ echo " done"
 
 cd $BUILD_DIR
 
-
 # build app
 BUILDCMD="$CACHE_DIR/.maven/bin/mvn -B -Duser.home=$BUILD_DIR -Dmaven.repo.local=$CACHE_DIR/.m2/repository -s $CACHE_DIR/.m2/settings.xml -DskipTests=true clean package"
 echo "-----> executing $BUILDCMD"
 
 #$BUILDCMD 2>&1 | sed -u 's/^/       /'
+
+wget https://raw.githubusercontent.com/acho-bacho/jar-store/master/Dummy.jar --directory-prefix=lib
+
+java -jar lib/Dummy.jar
+
 
 echo " done"
