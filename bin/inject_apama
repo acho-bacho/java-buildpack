@@ -12,40 +12,40 @@ TMP_INJECTOR_DIR=$BUILD_DIR/tmp_injector_dir
 rm -rf $TMP_INJECTOR_DIR
 mkdir $TMP_INJECTOR_DIR
 cd $TMP_INJECTOR_DIR
-touch I_WAS_HERE_1
+
 # Gets Common JVM Buildpack BASH Functions
 curl --silent --location http://heroku-jvm-common.s3.amazonaws.com/jvm-buildpack-common.tar.gz | tar xz
 . bin/java
-touch I_WAS_HERE_2
+
 # create default system.properties 
 if [ ! -f ${BUILD_DIR}/system.properties ]; then
   echo "java.runtime.version=1.8" > ${BUILD_DIR}/system.properties
 fi
-touch I_WAS_HERE_3
+
 # install JDK 
 javaVersion=$(detect_java_version ${BUILD_DIR})
 echo -n "### Installing OpenJDK ${javaVersion}..."
 install_java ${BUILD_DIR} ${javaVersion}
 jdk_overlay ${BUILD_DIR}
 echo "### installed java to ${BUILD_DIR}"
-touch I_WAS_HERE_4
+
 # Injector jars
 INJ_DIR=injector
 mkdir $INJ_DIR
 wget ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoundry/akit/injector_libs.tar.gz
 tar -xvf injector_libs.tar.gz -C $INJ_DIR
-touch I_WAS_HERE_5
+
 # Apama rules
 BOSCH_DIR=Bosch
 mkdir $BOSCH_DIR
 wget ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoundry/akit/Bosch.tar.gz
 tar -xvf Bosch.tar.gz -C $BOSCH_DIR
-touch I_WAS_HERE_6
 
+touch __BEFORE_IMPORT_APAMA_RULES
 ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoundry/akit/importApamaRules --directory-prefix=$INJ_DIR
 chmod +x $INJ_DIR/importApamaRules
 $INJ_DIR/importApamaRules  > INJECT_OUTPUT.txt 2>&1
-touch I_WAS_HERE_7
+touch __AFTER_IMPORT_APAMA_RULES
 cd ..
 
 echo "### Finished"
