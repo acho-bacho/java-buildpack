@@ -44,7 +44,10 @@ tar -xvf Bosch.tar.gz -C $BOSCH_DIR
 touch __BEFORE_IMPORT_APAMA_RULES
 ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoundry/akit/importApamaRules --directory-prefix=$INJ_DIR
 chmod +x $INJ_DIR/importApamaRules
-$INJ_DIR/importApamaRules  > INJECT_OUTPUT.txt 2>&1
+
+OUTPUT_FILE=$INJ_DIR/__OUTPUT_FILE_INJECTION.txt
+
+$INJ_DIR/importApamaRules  > $OUTPUT_FILE 2>&1
 touch __AFTER_IMPORT_APAMA_RULES
 cd ..
 
