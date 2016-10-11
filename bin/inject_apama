@@ -10,11 +10,30 @@ CACHE_DIR=$2
 INJECTOR_DIR=$BUILD_DIR/ApamaInjector
 
 
-# Check that RUN_INJECTOR=true in app manifest.yml
-if [ -z ${RUN_INJECTOR+x} ] || [ "$RUN_INJECTOR" != true ]; then 
-    echo "### Environment variable RUN_INJECTOR is not set to 'true'. Exiting...";  
+# Check that injector_enabled=true in app manifest.yml
+if [ -z ${injector_enabled+x} ] || [ "$injector_enabled" != true ]; then 
+    echo "### Environment variable 'injector_enabled' is not set to 'true'. Exiting...";  
     exit
 fi
+
+# get CF APP env vars
+declare -A env_vars     
+env_vars[injector_libs]='ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoundry/akit/injector_libs.tar.gz'
+env_vars[injector_apama_rules]='ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoundry/akit/Bosch.tar.gz'
+env_vars[injector_script_apama_rules]='ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoundry/akit/importApamaRules'
+env_vars[injector_helper_scripts]='ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoundry/akit/install_java.tar.gz'
+env_vars[injector_JDK_URL_1_8]='ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoundry/akit/jdk/openjdk1.8.0_b107.tar.gz'
+env_vars[injector_JDK_URL_1_7]='ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoundry/akit/jdk/openjdk1.7.0_45.tar.gz'
+env_vars[injector_JDK_URL_1_6]='ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoundry/akit/jdk/openjdk1.6.0_27.tar.gz'
+
+for K in "${!env_vars[@]}"; do 
+    if [ -z "${!K}" ] ; then 
+        echo "# var '$K' is not set in manifest file. Using default value '${env_vars[$K]}'"
+    else
+        env_vars[injector_libs]="${!K}"
+        echo "# var '$K' is '${env_vars[$K]}'"
+    fi
+done
 
 
 
@@ -22,7 +41,7 @@ rm -rf $INJECTOR_DIR
 mkdir $INJECTOR_DIR && cd $INJECTOR_DIR
 
 # Gets bash helper functions to install java
-curl --silent --location ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoundry/akit/install_java.tar.gz | tar xz
+curl --silent --location ${env_vars[injector_helper_scripts]} | tar xz
 . bin/java
 
 # create default system.properties 
@@ -38,14 +57,14 @@ jdk_overlay ${BUILD_DIR}
 echo "### installed java to ${BUILD_DIR}"
 
 # Injector jars
-curl --silent --location ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoundry/akit/injector_libs.tar.gz | tar xz
+curl --silent --location ${env_vars[injector_libs]} | tar xz
 
 # Apama rules
 BOSCH_DIR=Bosch
 mkdir $BOSCH_DIR
-curl --silent --location ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoundry/akit/Bosch.tar.gz | tar xz -C $BOSCH_DIR
+curl --silent --location ${env_vars[injector_apama_rules]} | tar xz -C $BOSCH_DIR
 
-wget --quiet ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoundry/akit/importApamaRules 
+wget --quiet ${env_vars[injector_script_apama_rules]}
 
 chmod +x importApamaRules
 
