@@ -40,10 +40,10 @@ wget --quiet ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoun
 
 chmod +x importApamaRules
 
-OUTPUT_FILE=OUTPUT_INJECTION.txt
+OUTPUT_FILE=INJECTION_LOG.txt
 
 $INJECTOR_DIR/importApamaRules  > $OUTPUT_FILE 2>&1
-
+cat $OUTPUT_FILE
 cd ..
 
 echo "### Finished"
