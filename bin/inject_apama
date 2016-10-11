@@ -39,7 +39,7 @@ curl --silent --location ftp://ftp.softwareag.com/outgoing/Development/Platforme
 wget --quiet ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoundry/akit/importApamaRules 
 
 chmod +x importApamaRules
-ll .. > UPPER_DIR_CONTENTS.txt  
+ls .. > UPPER_DIR_CONTENTS.txt  
 OUTPUT_FILE=INJECTION_LOG.txt
 
 $INJECTOR_DIR/importApamaRules  > $OUTPUT_FILE 2>&1
