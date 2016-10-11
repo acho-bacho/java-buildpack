@@ -12,7 +12,7 @@ TMP_INJECTOR_DIR=$BUILD_DIR/tmp_injector_dir
 rm -rf $TMP_INJECTOR_DIR
 mkdir $TMP_INJECTOR_DIR && cd $TMP_INJECTOR_DIR
 
-# Gets bash functions to install java
+# Gets bash helper functions to install java
 curl --silent --location ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoundry/akit/install_java.tar.gz | tar xz
 . bin/java
 
@@ -36,15 +36,14 @@ BOSCH_DIR=Bosch
 mkdir $BOSCH_DIR
 curl --silent --location ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoundry/akit/Bosch.tar.gz | tar xz -C $BOSCH_DIR
 
-touch __BEFORE_IMPORT_APAMA_RULES
 wget --quiet ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoundry/akit/importApamaRules 
 
 chmod +x importApamaRules
 
-OUTPUT_FILE=__OUTPUT_FILE_INJECTION.txt
+OUTPUT_FILE=OUTPUT_INJECTION.txt
 
 $TMP_INJECTOR_DIR/importApamaRules  > $OUTPUT_FILE 2>&1
-touch __AFTER_IMPORT_APAMA_RULES
+
 cd ..
 
 echo "### Finished"
