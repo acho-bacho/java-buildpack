@@ -12,7 +12,7 @@ INJECTOR_DIR=$BUILD_DIR/ApamaInjector
 
 
 if [ -z ${RUN_INJECTOR+x} ] || [ "$RUN_INJECTOR" != true ]; then 
-    echo "### ENV VAR RUN_INJECTOR is not set to 'true'. Exiting...";  
+    echo "### Environment variable RUN_INJECTOR is not set to 'true'. Exiting...";  
     exit
 fi
 
@@ -49,15 +49,7 @@ wget --quiet ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoun
 
 chmod +x importApamaRules
 
-printenv > printenv.txt  
-echo "### printenv is "
-cat printenv.txt  
-echo "### "
-
-
-
 OUTPUT_FILE=INJECTION_LOG.txt
-
 $INJECTOR_DIR/importApamaRules  > $OUTPUT_FILE 2>&1
 
 echo "### Apama Injection output:"
