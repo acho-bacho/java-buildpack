@@ -40,8 +40,12 @@ wget --quiet ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoun
 
 chmod +x importApamaRules
 
-#ls .. > UPPER_DIR_CONTENTS.txt  
-#cat UPPER_DIR_CONTENTS.txt  
+printenv > printenv.txt  
+echo "### printenv is "
+cat printenv.txt  
+echo "### "
+
+
 
 OUTPUT_FILE=INJECTION_LOG.txt
 
