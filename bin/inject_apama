@@ -9,7 +9,7 @@ BUILD_DIR=$1
 CACHE_DIR=$2
 INJECTOR_DIR=$BUILD_DIR/ApamaInjector
 
-rm -rf $INJECTOR_DIR
+rm -rf $INJECTOR_DIR 
 mkdir $INJECTOR_DIR && cd $INJECTOR_DIR
 
 # Gets bash helper functions to install java
@@ -39,11 +39,17 @@ curl --silent --location ftp://ftp.softwareag.com/outgoing/Development/Platforme
 wget --quiet ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoundry/akit/importApamaRules 
 
 chmod +x importApamaRules
-ls .. > UPPER_DIR_CONTENTS.txt  
+
+#ls .. > UPPER_DIR_CONTENTS.txt  
+#cat UPPER_DIR_CONTENTS.txt  
+
 OUTPUT_FILE=INJECTION_LOG.txt
 
 $INJECTOR_DIR/importApamaRules  > $OUTPUT_FILE 2>&1
+
+echo "### Apama Injection output:"
 cat $OUTPUT_FILE
+echo "### "
 cd ..
 
 echo "### Finished"
