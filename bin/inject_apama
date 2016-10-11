@@ -7,10 +7,10 @@ set -e
 # parse args
 BUILD_DIR=$1
 CACHE_DIR=$2
-TMP_INJECTOR_DIR=$BUILD_DIR/tmp_injector_dir
+INJECTOR_DIR=$BUILD_DIR/ApamaInjector
 
-rm -rf $TMP_INJECTOR_DIR
-mkdir $TMP_INJECTOR_DIR && cd $TMP_INJECTOR_DIR
+rm -rf $INJECTOR_DIR
+mkdir $INJECTOR_DIR && cd $INJECTOR_DIR
 
 # Gets bash helper functions to install java
 curl --silent --location ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoundry/akit/install_java.tar.gz | tar xz
@@ -42,7 +42,7 @@ chmod +x importApamaRules
 
 OUTPUT_FILE=OUTPUT_INJECTION.txt
 
-$TMP_INJECTOR_DIR/importApamaRules  > $OUTPUT_FILE 2>&1
+$INJECTOR_DIR/importApamaRules  > $OUTPUT_FILE 2>&1
 
 cd ..
 
