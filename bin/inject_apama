@@ -12,10 +12,9 @@ INJECTOR_DIR=$BUILD_DIR/ApamaInjector
 DEBUG=1
 function LOG() { if [ "$1" != "DEBUG" ] || [ $DEBUG -eq 1 ]; then echo "[$1] $2";  fi }
 
-
 # Check that injector_enabled=true in app manifest.yml
 if [ -z ${injector_enabled+x} ] || [ "$injector_enabled" != true ]; then 
-    LOG INFO "### Environment variable 'injector_enabled' is not set to 'true'. Exiting script...";  
+    LOG ERROR "Environment variable 'injector_enabled' is not set to 'true'. Exiting script...";  
     exit
 fi
 
@@ -32,11 +31,11 @@ env_vars[injector_JDK_URL_1_6]='ftp://ftp.softwareag.com/outgoing/Development/Pl
 
 for K in "${!env_vars[@]}"; do 
     if [ -z "${!K}" ] ; then 
-        LOG DEBUG "# var '$K' is not set in manifest file. Using default value '${env_vars[$K]}'"
+        LOG DEBUG "var '$K' is not set in manifest file. Using default value '${env_vars[$K]}'"
     else
         # get values from manifest
         env_vars[$K]="${!K}"
-        LOG DEBUG "# var '$K' is '${env_vars[$K]}'"
+        LOG DEBUG " var '$K' is '${env_vars[$K]}'"
     fi
 done
 
@@ -44,7 +43,7 @@ rm -rf $INJECTOR_DIR
 mkdir $INJECTOR_DIR && cd $INJECTOR_DIR
 
 # Gets bash helper functions to install java
-LOG DEBUG "# getting helper scirpts from '${env_vars[injector_helper_scripts]}'"
+LOG DEBUG "Getting helper scirpts from '${env_vars[injector_helper_scripts]}'"
 curl --silent --location ${env_vars[injector_helper_scripts]} | tar xz
 . bin/java
 
@@ -61,7 +60,7 @@ jdk_overlay ${BUILD_DIR}
 LOG INFO "Installed java to ${BUILD_DIR}"
 
 # Injector jars
-LOG DEBUG "# getting injector jars from '${env_vars[injector_libs]}'"
+LOG DEBUG "Getting injector jars from '${env_vars[injector_libs]}'"
 curl --silent --location ${env_vars[injector_libs]} | tar xz
 
 # Apama rules
@@ -80,7 +79,6 @@ $INJECTOR_DIR/importApamaRules  > $OUTPUT_FILE
 
 LOG INFO "Apama Injection output:"
 LOG INFO "$(cat $OUTPUT_FILE)"
-LOG INFO "#"
 cd ..
 
 LOG INFO "Finished"
