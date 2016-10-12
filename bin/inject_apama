@@ -19,7 +19,8 @@ if [ -z ${injector_enabled+x} ] || [ "$injector_enabled" != true ]; then
 fi
 
 # get CF APP env vars
-declare -A env_vars     
+declare -A env_vars  
+#default values, if not set in app manifest   
 env_vars[injector_libs]='ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoundry/akit/injector_libs.tar.gz'
 env_vars[injector_apama_rules]='ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoundry/akit/Bosch.tar.gz'
 env_vars[injector_script_apama_rules]='ftp://ftp.softwareag.com/outgoing/Development/Platformers/CloudFoundry/akit/importApamaRules'
@@ -32,10 +33,26 @@ for K in "${!env_vars[@]}"; do
     if [ -z "${!K}" ] ; then 
         log_debug "# var '$K' is not set in manifest file. Using default value '${env_vars[$K]}'"
     else
-        env_vars[injector_libs]="${!K}"
+        env_vars[$K]="${!K}"
         log_debug "# var '$K' is '${env_vars[$K]}'"
     fi
 done
+
+
+
+
+
+for K in "${!env_vars[@]}"; do 
+    log_debug "# >>>>>>>>>>>>>>>>>>>>var '$K' is '${env_vars[$K]}'"
+done
+
+
+
+
+
+
+
+
 
 rm -rf $INJECTOR_DIR 
 mkdir $INJECTOR_DIR && cd $INJECTOR_DIR
@@ -74,7 +91,7 @@ wget --quiet ${env_vars[injector_script_apama_rules]}
 chmod +x importApamaRules
 
 OUTPUT_FILE=INJECTION_LOG.txt
-$INJECTOR_DIR/importApamaRules  > $OUTPUT_FILE 2>&1
+$INJECTOR_DIR/importApamaRules  > $OUTPUT_FILE
 
 echo "### Apama Injection output:"
 cat $OUTPUT_FILE
