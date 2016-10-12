@@ -33,6 +33,7 @@ for K in "${!env_vars[@]}"; do
     if [ -z "${!K}" ] ; then 
         log_debug "# var '$K' is not set in manifest file. Using default value '${env_vars[$K]}'"
     else
+        # get values from manifest
         env_vars[$K]="${!K}"
         log_debug "# var '$K' is '${env_vars[$K]}'"
     fi
@@ -40,7 +41,6 @@ done
 
 rm -rf $INJECTOR_DIR 
 mkdir $INJECTOR_DIR && cd $INJECTOR_DIR
-
 
 # Gets bash helper functions to install java
 log_debug "# getting helper scirpts from '${env_vars[injector_helper_scripts]}'"
