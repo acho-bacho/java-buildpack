@@ -40,7 +40,9 @@ done
 rm -rf $INJECTOR_DIR 
 mkdir $INJECTOR_DIR && cd $INJECTOR_DIR
 
+
 # Gets bash helper functions to install java
+log_debug "# getting helper scirpts from '${env_vars[injector_helper_scripts]}'"
 curl --silent --location ${env_vars[injector_helper_scripts]} | tar xz
 . bin/java
 
@@ -57,13 +59,16 @@ jdk_overlay ${BUILD_DIR}
 echo "### installed java to ${BUILD_DIR}"
 
 # Injector jars
+log_debug "# getting injector jars from '${env_vars[injector_libs]}'"
 curl --silent --location ${env_vars[injector_libs]} | tar xz
 
 # Apama rules
 BOSCH_DIR=Bosch
 mkdir $BOSCH_DIR
+log_debug "# getting Apama Rules from '${env_vars[injector_apama_rules]}'"
 curl --silent --location ${env_vars[injector_apama_rules]} | tar xz -C $BOSCH_DIR
 
+log_debug "# getting Apama Rules script from '${env_vars[injector_script_apama_rules]}'"
 wget --quiet ${env_vars[injector_script_apama_rules]}
 
 chmod +x importApamaRules
