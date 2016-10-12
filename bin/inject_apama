@@ -10,7 +10,7 @@ CACHE_DIR=$2
 INJECTOR_DIR=$BUILD_DIR/ApamaInjector
 
 DEBUG=1
-function log_debug () { if [[ $DEBUG -eq 1 ]]; then echo "$@" fi }
+function log_debug () { if [[ $DEBUG -eq 1 ]]; then echo "$@"; fi }
 
 # Check that injector_enabled=true in app manifest.yml
 if [ -z ${injector_enabled+x} ] || [ "$injector_enabled" != true ]; then 
