@@ -10,11 +10,12 @@ CACHE_DIR=$2
 INJECTOR_DIR=$BUILD_DIR/ApamaInjector
 
 DEBUG=1
-function log_debug () { if [[ $DEBUG -eq 1 ]]; then echo "$@"; fi }
+function LOG() { if [ "$1" != "DEBUG" ] || [ $DEBUG -eq 1 ]; then echo "[$1] $2";  fi }
+
 
 # Check that injector_enabled=true in app manifest.yml
 if [ -z ${injector_enabled+x} ] || [ "$injector_enabled" != true ]; then 
-    echo "### Environment variable 'injector_enabled' is not set to 'true'. Exiting script...";  
+    LOG INFO "### Environment variable 'injector_enabled' is not set to 'true'. Exiting script...";  
     exit
 fi
 
@@ -31,11 +32,11 @@ env_vars[injector_JDK_URL_1_6]='ftp://ftp.softwareag.com/outgoing/Development/Pl
 
 for K in "${!env_vars[@]}"; do 
     if [ -z "${!K}" ] ; then 
-        log_debug "# var '$K' is not set in manifest file. Using default value '${env_vars[$K]}'"
+        LOG DEBUG "# var '$K' is not set in manifest file. Using default value '${env_vars[$K]}'"
     else
         # get values from manifest
         env_vars[$K]="${!K}"
-        log_debug "# var '$K' is '${env_vars[$K]}'"
+        LOG DEBUG "# var '$K' is '${env_vars[$K]}'"
     fi
 done
 
@@ -43,7 +44,7 @@ rm -rf $INJECTOR_DIR
 mkdir $INJECTOR_DIR && cd $INJECTOR_DIR
 
 # Gets bash helper functions to install java
-log_debug "# getting helper scirpts from '${env_vars[injector_helper_scripts]}'"
+LOG DEBUG "# getting helper scirpts from '${env_vars[injector_helper_scripts]}'"
 curl --silent --location ${env_vars[injector_helper_scripts]} | tar xz
 . bin/java
 
@@ -54,22 +55,22 @@ fi
 
 # install JDK 
 javaVersion=$(detect_java_version ${BUILD_DIR})
-echo -n "### Installing OpenJDK ${javaVersion}..."
+LOG INFO "Installing OpenJDK ${javaVersion}..."
 install_java ${BUILD_DIR} ${javaVersion}
 jdk_overlay ${BUILD_DIR}
-echo "### installed java to ${BUILD_DIR}"
+LOG INFO "Installed java to ${BUILD_DIR}"
 
 # Injector jars
-log_debug "# getting injector jars from '${env_vars[injector_libs]}'"
+LOG DEBUG "# getting injector jars from '${env_vars[injector_libs]}'"
 curl --silent --location ${env_vars[injector_libs]} | tar xz
 
 # Apama rules
 BOSCH_DIR=Bosch
 mkdir $BOSCH_DIR
-log_debug "# getting Apama Rules from '${env_vars[injector_apama_rules]}'"
+LOG DEBUG "Getting Apama Rules from '${env_vars[injector_apama_rules]}'"
 curl --silent --location ${env_vars[injector_apama_rules]} | tar xz -C $BOSCH_DIR
 
-log_debug "# getting Apama Rules script from '${env_vars[injector_script_apama_rules]}'"
+LOG DEBUG "Getting Apama Rules script from '${env_vars[injector_script_apama_rules]}'"
 wget --quiet ${env_vars[injector_script_apama_rules]}
 
 chmod +x importApamaRules
@@ -77,9 +78,9 @@ chmod +x importApamaRules
 OUTPUT_FILE=INJECTION_LOG.txt
 $INJECTOR_DIR/importApamaRules  > $OUTPUT_FILE
 
-echo "### Apama Injection output:"
-cat $OUTPUT_FILE
-echo "### "
+LOG INFO "Apama Injection output:"
+LOG INFO "$(cat $OUTPUT_FILE)"
+LOG INFO "#"
 cd ..
 
-echo "### Finished"
+LOG INFO "Finished"
