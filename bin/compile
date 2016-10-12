@@ -24,7 +24,7 @@ require 'java_buildpack/buildpack'
 build_dir = ARGV[0]
 cache_dir = ARGV[1]
 
-#if File.exist? File.join(build_dir, 'INJECT.ENABLED')
+#if File.exist? File.join(build_dir, 'INJECT.TRIGGER.FILE')
     bin_dir = File.expand_path('..', __FILE__)
     system "#{bin_dir}/inject_apama", build_dir, cache_dir
 #else
