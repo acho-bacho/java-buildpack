@@ -9,10 +9,12 @@ BUILD_DIR=$1
 CACHE_DIR=$2
 INJECTOR_DIR=$BUILD_DIR/ApamaInjector
 
+DEBUG=1
+function log_debug () { if [[ $DEBUG -eq 1 ]]; then echo "$@" fi }
 
 # Check that injector_enabled=true in app manifest.yml
 if [ -z ${injector_enabled+x} ] || [ "$injector_enabled" != true ]; then 
-    echo "### Environment variable 'injector_enabled' is not set to 'true'. Exiting...";  
+    echo "### Environment variable 'injector_enabled' is not set to 'true'. Exiting script...";  
     exit
 fi
 
@@ -28,14 +30,12 @@ env_vars[injector_JDK_URL_1_6]='ftp://ftp.softwareag.com/outgoing/Development/Pl
 
 for K in "${!env_vars[@]}"; do 
     if [ -z "${!K}" ] ; then 
-        echo "# var '$K' is not set in manifest file. Using default value '${env_vars[$K]}'"
+        log_debug "# var '$K' is not set in manifest file. Using default value '${env_vars[$K]}'"
     else
         env_vars[injector_libs]="${!K}"
-        echo "# var '$K' is '${env_vars[$K]}'"
+        log_debug "# var '$K' is '${env_vars[$K]}'"
     fi
 done
-
-
 
 rm -rf $INJECTOR_DIR 
 mkdir $INJECTOR_DIR && cd $INJECTOR_DIR
