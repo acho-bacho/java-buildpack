@@ -80,6 +80,10 @@ $INJECTOR_DIR/importApamaRules  > $OUTPUT_FILE
 
 LOG INFO "Apama Injection output:"
 LOG INFO "$(cat $OUTPUT_FILE)"
+
+printenv > ENV_VARS.txt
+LOG INFO "$(cat ENV_VARS.txt)"
+
 cd ..
-LOG INFO $(printenv) > ENV_VARS.txt     
+
 LOG INFO "Finished"
