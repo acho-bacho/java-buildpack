@@ -3,6 +3,7 @@
 
 # fail fast
 set -e
+set -x
 
 # parse args
 BUILD_DIR=$1
